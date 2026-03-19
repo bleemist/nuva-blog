@@ -161,6 +161,25 @@
             color: #d1d5db;
         }
 
+        .rich-text img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 1rem;
+            margin: 2rem 0;
+        }
+
+        .rich-text video {
+            max-width: 100%;
+            border-radius: 1rem;
+            margin: 2rem 0;
+        }
+
+        .rich-text iframe {
+            max-width: 100%;
+            border-radius: 1rem;
+            margin: 2rem 0;
+        }
+
         /* Mobile optimizations */
         @media (max-width: 768px) {
             .nav-link {
@@ -190,6 +209,11 @@
                 width: 4px;
                 height: 4px;
             }
+
+            .rich-text blockquote {
+                font-size: 1.2rem;
+                padding-left: 1rem;
+            }
         }
 
         /* Custom scrollbar */
@@ -216,6 +240,47 @@
             -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
             overflow: hidden;
+        }
+
+        /* Content type badges */
+        .content-badge {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(5px);
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            z-index: 10;
+        }
+
+        /* Gallery grid */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 1rem;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.05);
         }
     </style>
 </head>
@@ -310,11 +375,11 @@
             <footer class="bg-black border-t border-gray-900 py-12 sm:py-16">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 text-center">
                     <div class="flex justify-center gap-6 sm:gap-8 text-xl sm:text-2xl mb-6 sm:mb-8">
-                        <i class="fa-brands fa-x-twitter hover:text-[#fe4f04] cursor-pointer transition"></i>
-                        <i class="fa-brands fa-linkedin hover:text-[#fe4f04] cursor-pointer transition"></i>
-                        <i class="fa-brands fa-instagram hover:text-[#fe4f04] cursor-pointer transition"></i>
+                        <a href="https://x.com/nuva_ug_"><i class="fa-brands fa-x-twitter hover:text-[#fe4f04] cursor-pointer transition"></i></a>
+                        <a href="www.linkedin.com/in/nuva-systems-b636273b8"><i class="fa-brands fa-linkedin hover:text-[#fe4f04] cursor-pointer transition"></i></a>
+                        <a href="https://www.instagram.com/nuva_ug"><i class="fa-brands fa-instagram hover:text-[#fe4f04] cursor-pointer transition"></i></a>
                     </div>
-                    <p class="text-[0.6rem] sm:text-xs text-gray-500 tracking-widest">© 2026 NUVA JOURNAL • ALL RIGHTS RESERVED</p>
+                    <p class="text-[0.6rem] sm:text-xs text-gray-500 tracking-widest">© 2026 NUVA JOURNAL • ALL RIGHTS RESERVED & OWNED BY MUYANJA ANDREW</p>
                 </div>
             </footer>
         </div>
@@ -327,10 +392,10 @@
         <div onclick="event.stopPropagation()" 
              class="modal bg-zinc-950 w-full max-w-4xl max-h-[90vh] overflow-auto rounded-2xl sm:rounded-3xl shadow-2xl">
             
-            <!-- Modal header image -->
-            <div id="modal-image" class="h-48 sm:h-80 bg-cover bg-center relative">
+            <!-- Modal header (optional image/video) -->
+            <div id="modal-media" class="relative w-full bg-cover bg-center" style="min-height: 200px;">
                 <button onclick="closeModal()" 
-                        class="absolute top-3 right-3 sm:top-6 sm:right-6 bg-black/60 hover:bg-black text-white w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-xl sm:rounded-2xl transition">
+                        class="absolute top-3 right-3 sm:top-6 sm:right-6 bg-black/60 hover:bg-black text-white w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-xl sm:rounded-2xl transition z-20">
                     <i class="fa-solid fa-times"></i>
                 </button>
             </div>
@@ -382,7 +447,7 @@
             if (saved) {
                 posts = JSON.parse(saved);
             } else {
-                // Seed with sample posts
+                // Seed with diverse sample posts
                 posts = [
                     {
                         id: 1,
@@ -392,7 +457,10 @@
                                   <p class="mb-6">The greatest thinkers of our time — from Seneca to Simone Weil — understood that clarity emerges only in silence. Yet we fear it. We fill every quiet moment with sound.</p>
                                   <blockquote class="border-l-4 border-[#fe4f04] pl-8 italic text-xl sm:text-2xl my-8 sm:my-12">"Silence is the language of God; all else is poor translation."</blockquote>
                                   <p>Perhaps the most beautiful spaces we can create are the ones that invite nothing but thought.</p>`,
-                        image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&auto=format",
+                        media: {
+                            type: "image",
+                            url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&auto=format"
+                        },
                         date: "March 12, 2026",
                         comments: []
                     },
@@ -402,7 +470,10 @@
                         excerpt: "Why quality will always outlive quantity.",
                         content: `<p>The internet told us bigger is better. More followers, more likes, more reach. Yet the work that truly moves people has always been the work done with obsessive care for the few.</p>
                                   <p>Handwritten letters still carry more weight than mass emails. A single perfectly cut garment outlives a thousand fast-fashion pieces. The same principle applies to ideas.</p>`,
-                        image: "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?w=1200&auto=format",
+                        media: {
+                            type: "image",
+                            url: "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?w=1200&auto=format"
+                        },
                         date: "March 10, 2026",
                         comments: [
                             { name: "Elena Voss", text: "This is exactly what I needed to hear today. Thank you.", date: "2h ago" }
@@ -414,7 +485,10 @@
                         excerpt: "Good things take time. Great things take even longer.",
                         content: `<p>In a world of instant gratification, patience has become a forgotten virtue. We want results now, answers now, success now. But the most meaningful creations in history weren't built in a day.</p>
                                   <p>Michelangelo spent four years painting the Sistine Chapel. Darwin took two decades to develop his theory of evolution. True mastery requires time — and our willingness to wait for it.</p>`,
-                        image: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1200&auto=format",
+                        media: {
+                            type: "image",
+                            url: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1200&auto=format"
+                        },
                         date: "March 8, 2026",
                         comments: []
                     },
@@ -424,8 +498,38 @@
                         excerpt: "Finding focus in a distracted world.",
                         content: `<p>The average person touches their phone over 2,600 times a day. We've built a world that demands our constant attention, yet we wonder why we feel exhausted.</p>
                                   <p>Digital minimalism isn't about rejecting technology — it's about using it with intention. It's about asking: Does this serve my values, or just someone else's metrics?</p>`,
-                        image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1200&auto=format",
+                        media: {
+                            type: "image",
+                            url: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1200&auto=format"
+                        },
                         date: "March 5, 2026",
+                        comments: []
+                    },
+                    {
+                        id: 5,
+                        title: "Video Essay: The Nature of Time",
+                        excerpt: "A cinematic exploration of how we perceive time.",
+                        content: `<p>Time is the most valuable currency we have, yet we spend it recklessly. This video essay explores how different cultures and philosophies perceive time, and how we can learn to value each moment.</p>
+                                  <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin: 2rem 0;">
+                                      <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>
+                                  </div>
+                                  <p>The ancient Greeks had two words for time: Chronos (sequential time) and Kairos (the right moment). Perhaps we need both to live fully.</p>`,
+                        media: {
+                            type: "video",
+                            url: "https://www.youtube.com/embed/dQw4w9WgXcQ"
+                        },
+                        date: "March 3, 2026",
+                        comments: []
+                    },
+                    {
+                        id: 6,
+                        title: "Just Text",
+                        excerpt: "Sometimes words are enough.",
+                        content: `<p>This is a pure text post. No images, no videos. Just words on a page. Sometimes that's all you need to convey an idea, a feeling, a moment.</p>
+                                  <p>The beauty of text is that it leaves room for imagination. When you read, you create the images in your mind. You become a co-creator of the experience.</p>
+                                  <p>In a world saturated with visual stimuli, pure text can be a form of resistance. It demands attention, focus, and participation from the reader.</p>`,
+                        media: null,
+                        date: "March 1, 2026",
                         comments: []
                     }
                 ];
@@ -437,6 +541,14 @@
             localStorage.setItem('nuvaPosts', JSON.stringify(posts));
         }
         
+        // Detect content type for preview
+        function getContentType(post) {
+            if (post.media && post.media.type === 'video') return 'video';
+            if (post.media && post.media.type === 'image') return 'image';
+            if (post.content && !post.media) return 'text';
+            return 'mixed';
+        }
+        
         // Render posts grid
         function renderPosts() {
             const container = document.getElementById('posts-grid');
@@ -446,9 +558,34 @@
             
             posts.slice(0, 6).forEach(post => {
                 const card = document.createElement('div');
-                card.className = 'post-card bg-zinc-900 rounded-2xl sm:rounded-3xl overflow-hidden cursor-pointer group';
+                card.className = 'post-card bg-zinc-900 rounded-2xl sm:rounded-3xl overflow-hidden cursor-pointer group relative';
+                
+                const contentType = getContentType(post);
+                let mediaHtml = '';
+                
+                if (post.media && post.media.type === 'image') {
+                    mediaHtml = `<div class="h-48 sm:h-64 bg-cover bg-center" style="background-image: url('${post.media.url}')"></div>`;
+                } else if (post.media && post.media.type === 'video') {
+                    mediaHtml = `<div class="h-48 sm:h-64 bg-gray-800 flex items-center justify-center">
+                        <i class="fa-solid fa-play text-4xl text-[#fe4f04]"></i>
+                    </div>`;
+                } else {
+                    mediaHtml = `<div class="h-48 sm:h-64 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
+                        <i class="fa-solid fa-quote-right text-4xl text-gray-600"></i>
+                    </div>`;
+                }
+                
+                // Content type badge
+                const badgeHtml = `<div class="content-badge">
+                    <i class="fa-solid ${contentType === 'video' ? 'fa-video' : contentType === 'image' ? 'fa-image' : 'fa-quote-right'} text-[#fe4f04]"></i>
+                    <span>${contentType.toUpperCase()}</span>
+                </div>`;
+                
                 card.innerHTML = `
-                    <div class="h-48 sm:h-64 bg-cover bg-center" style="background-image: url('${post.image}')"></div>
+                    <div class="relative">
+                        ${mediaHtml}
+                        ${badgeHtml}
+                    </div>
                     <div class="p-4 sm:p-8">
                         <div class="text-[0.6rem] sm:text-xs text-gray-400 mb-2 sm:mb-3">${post.date}</div>
                         <h3 class="heading-font text-xl sm:text-3xl tracking-tighter leading-tight sm:leading-none mb-2 sm:mb-4 group-hover:text-[#fe4f04] transition">${post.title}</h3>
@@ -469,7 +606,37 @@
             
             currentPostId = id;
             
-            document.getElementById('modal-image').style.backgroundImage = `url('${post.image}')`;
+            // Handle media display
+            const modalMedia = document.getElementById('modal-media');
+            if (post.media && post.media.type === 'image') {
+                modalMedia.style.backgroundImage = `url('${post.media.url}')`;
+                modalMedia.style.backgroundSize = 'cover';
+                modalMedia.style.backgroundPosition = 'center';
+                modalMedia.style.minHeight = '300px';
+                modalMedia.innerHTML = `<button onclick="closeModal()" class="absolute top-3 right-3 sm:top-6 sm:right-6 bg-black/60 hover:bg-black text-white w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-xl sm:rounded-2xl transition z-20">
+                    <i class="fa-solid fa-times"></i>
+                </button>`;
+            } else if (post.media && post.media.type === 'video') {
+                modalMedia.style.backgroundImage = 'none';
+                modalMedia.style.backgroundColor = '#000';
+                modalMedia.style.minHeight = '300px';
+                modalMedia.innerHTML = `
+                    <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%;">
+                        <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" src="${post.media.url}" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                    <button onclick="closeModal()" class="absolute top-3 right-3 sm:top-6 sm:right-6 bg-black/60 hover:bg-black text-white w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-xl sm:rounded-2xl transition z-20">
+                        <i class="fa-solid fa-times"></i>
+                    </button>
+                `;
+            } else {
+                modalMedia.style.backgroundImage = 'none';
+                modalMedia.style.backgroundColor = 'transparent';
+                modalMedia.style.minHeight = 'auto';
+                modalMedia.innerHTML = `<button onclick="closeModal()" class="absolute top-3 right-3 sm:top-6 sm:right-6 bg-black/60 hover:bg-black text-white w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-xl sm:rounded-2xl transition z-20">
+                    <i class="fa-solid fa-times"></i>
+                </button>`;
+            }
+            
             document.getElementById('modal-date').textContent = post.date;
             document.getElementById('modal-title').textContent = post.title;
             document.getElementById('modal-content').innerHTML = post.content;
